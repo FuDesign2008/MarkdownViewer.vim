@@ -21,7 +21,7 @@ if !exists('g:markdown_preview_app')
 endif
 
 function! PreviewMarkdown()
-    let cmd = "silent !open -a /Applications/" . g:preview_app . " '%:p'"
+    let cmd = "silent !open -a /Applications/" . g:markdown_preview_app . " '%:p'"
     execute cmd
 endfunction
 
