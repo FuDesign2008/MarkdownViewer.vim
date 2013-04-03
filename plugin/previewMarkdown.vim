@@ -9,19 +9,28 @@
 
 
 
-if &cp || exists("g:preview_markdown")
+if &cp || exists('g:preview_markdown_loaded')
     finish
 endif
-let g:preview_markdown = 1
+let g:preview_markdown_loaded = 1
 let s:save_cpo = &cpo
 set cpo&vim
 
 if !exists('g:markdown_preview_app')
-    let g:markdown_preview_app = 'Mou.app'
+    let g:markdown_preview_app = 0
 endif
 
 function! PreviewMarkdown()
-    let cmd = "silent !open -a /Applications/" . g:markdown_preview_app . " '%:p'"
+    if !g:markdown_preview_app
+        echomsg 'g:markdown_preview_app has NO config!'
+        return
+    endif
+
+    if has('mac')
+        let cmd = 'silent !open -a ' . g:markdown_preview_app . ' "%:p"'
+    elseif has('win32') || has('win64') || has('win95') || has('win16')
+        let cmd = '!cmd /c start /b' . g:markdown_preview_app . ' "%:p"'
+    endif
     execute cmd
 endfunction
 
