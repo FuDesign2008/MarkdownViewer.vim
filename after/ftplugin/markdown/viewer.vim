@@ -20,7 +20,7 @@ if exists('g:mdv_sav_html')
     let s:savHtml = g:mdv_sav_html
 endif
 
-let s:autoView = 1
+let s:autoView = 0
 if exists('g:mdv_auto_view')
     let s:autoView = g:mdv_auto_view
 endif
@@ -57,10 +57,27 @@ function s:ReadFile(file, spliter)
     return ''
 endfunction
 "
+" @param {String} html
+" @return {String}
+"
+function s:GetTitle(html)
+    let matched = matchstr(a:html, '<h1[^>]\+>[^<]\+</h1>')
+    if matched == ''
+        let matched = matchstr(a:html, '<h1>[^<]\+</h1>')
+    endif
+    if matched == ''
+        return ''
+    endif
+    let gtIndex = stridx(matched, '>')
+    let ltIndexRight = strridx(matched, '<')
+    return strpart(matched, gtIndex + 1, ltIndexRight - gtIndex - 1)
+endfunction
+"
 "@param {String} theme
 "@param {String} content
 "@return {List}
 function s:Convert2Html(theme, content)
+    let title = s:GetTitle(a:content)
     let html = s:ReadFile('/bone.html', '')
     let style = s:ReadFile('/' . a:theme . '.css', '\n')
     if len(style) < 1
@@ -68,12 +85,14 @@ function s:Convert2Html(theme, content)
     endif
     "echo html
     "echo style
-    let html  = substitute(html, '<%=style%>', style, '')
-    let html  = substitute(html, '<%=title%>', 'title', '')
-    let html  = substitute(html, '<%=content%>', a:content, '')
+    let html  = substitute(html, '{{style}}', style, '')
+    let html  = substitute(html, '{{title}}', title, '')
+    let html  = substitute(html, '{{content}}', escape(a:content, ' &'), '')
     "echo  html
     return split(html, '\n')
+    "return split(a:content, '\n')
 endfunction
+
 
 function! s:ViewMarkDown()
     let text = getline(1, '$')
