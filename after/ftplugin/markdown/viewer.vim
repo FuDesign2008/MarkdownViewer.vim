@@ -15,19 +15,14 @@ set cpo&vim
 
 let s:scriptPath = expand('<sfile>:hp')
 
-let s:savHtml = 1
-if exists('g:mdv_sav_html')
-    let s:savHtml = g:mdv_sav_html
+let s:saveHtml = 1
+if exists('g:mdv_save_html')
+    let s:saveHtml = g:mdv_save_html
 endif
 
-let s:autoView = 0
-if exists('g:mdv_auto_view')
-    let s:autoView = g:mdv_auto_view
-endif
-
-let s:customKey = 0
-if exists('g:mdv_custom_key')
-    let s:customKey = g:mdv_custom_key
+let s:autoSave = 1
+if exists('g:mdv_auto_save')
+    let s:autoSave = g:mdv_auto_save
 endif
 
 let s:defaultTheme = 'github2'
@@ -93,8 +88,10 @@ function s:Convert2Html(theme, content)
     "return split(a:content, '\n')
 endfunction
 
-
-function! s:ViewMarkDown()
+"
+"write html to file
+"@return {String}  the path of writed file
+function! s:WriteHtml()
     let text = getline(1, '$')
     let tempMarkdown = tempname()
     call writefile(text, tempMarkdown, '')
@@ -102,24 +99,30 @@ function! s:ViewMarkDown()
     let parsed = system('marked  --input ' . shellescape(tempMarkdown))
     "echo type(parsed)
     let html = s:Convert2Html(s:theme, parsed)
-    if s:savHtml
+    if s:saveHtml
         let fileName = expand('%p') . '.html'
     else
         let fileName = tempname()
     endif
     call writefile(html, fileName, '')
-    call s:OpenFile(fileName)
+    return fileName
+endfunction
+
+
+function! s:ViewMarkDown()
+    let filePath = s:WriteHtml()
+    call s:OpenFile(filePath)
 endfunction
 
 command -nargs=0 ViewMarkDown call s:ViewMarkDown()
 
-if s:autoView
-    autocmd BufWritePost <buffer>  :ViewMarkDown
+if s:saveHtml
+    command -nargs=0 Save2Html call s:WriteHtml()
+    if s:autoSave
+        autocmd BufWritePost <buffer>  :Save2Html
+    endif
 endif
 
-if !s:customKey
-    noremap <buffer> <leader>v :ViewMarkDown<CR>
-endif
 
 
 let &cpo = s:save_cpo
