@@ -1,7 +1,7 @@
 "
 " preview.vim  in ftplugin/markdown/
 "
-" Providing `:MdView` command.
+" Providing `:ViewMarkDown` command.
 "
 "
 

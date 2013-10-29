@@ -1,6 +1,7 @@
 MarkdownViewer.vim
 ===================
-Parse markdown to html and preview it, compatible with [GitHub flavored markdown](https://help.github.com/articles/github-flavored-markdown).
+Parse markdown to html and preview it, compatible with [GitHub flavored
+markdown](https://help.github.com/articles/github-flavored-markdown).
 
 
 ##Install
@@ -20,12 +21,8 @@ Parse markdown to html and preview it, compatible with [GitHub flavored markdown
 1. `g:mdv_sav_html`, when previewing, save the html file at the directory which
    the  markdown file is in. The default value is `1`.
 
-<<<<<<< HEAD
 1. `g:mdv_auto_view`, when saving markdown file, automatically preview the file
-   or not. The default value is `1`.
-=======
-1. `g:mdv_auto_view`, when saving markdown file, automatically preview the file or not. The default value is `0`.
->>>>>>> af5b68bad64eae4fe48a3272088345c8c1b84f2f
+   or not. The default value is `0`.
 
 1. `g:mdv_custom_key`, custom shortcut to run `:ViewMarkdown` command or not.
    The default is `0`, and the  shortcut is `<leader>v`.
