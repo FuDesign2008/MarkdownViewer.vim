@@ -120,7 +120,7 @@ if s:saveHtml
     command -nargs=0 Save2Html call s:WriteHtml()
     if s:autoSave
         " use BufWritePre instead of BufWritePost
-        autocmd BufWritePre <buffer>  :Save2Html
+        autocmd BufWritePre *.mkd,*.md,*.markdown  :Save2Html
     endif
 endif
 
