@@ -32,6 +32,9 @@ markdown](https://help.github.com/articles/github-flavored-markdown).
    only if `g:mdv_save_html` is `1`. If `g:mdv_auto_save` is `1`, the pluin
    will save html file automatically when saving markdown file.
 
+##Screenshot
+![MarkdownViewer Screenshot](./markdown_viewer.png)
+
 ##Next
 1. add highlight for code
 
