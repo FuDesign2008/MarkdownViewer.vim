@@ -119,7 +119,8 @@ command -nargs=0 ViewMarkDown call s:ViewMarkDown()
 if s:saveHtml
     command -nargs=0 Save2Html call s:WriteHtml()
     if s:autoSave
-        autocmd BufWritePost <buffer>  :Save2Html
+        " use BufWritePre instead of BufWritePost
+        autocmd BufWritePre <buffer>  :Save2Html
     endif
 endif
 
