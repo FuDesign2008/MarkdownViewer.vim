@@ -6,7 +6,8 @@ markdown](https://help.github.com/articles/github-flavored-markdown).
 
 ##Install
 1. Install `node.js` and `npm`.
-1. Install `marked` globally, `npm install marked -g` or `sudo install maked -g`.
+1. Install `marked` globally, `npm install marked -g` or `sudo npm install
+   maked -g`.
 1. Copy the `after` folder to `~/.vim`.
 1. Ensure you have the line `filetype plugin on` in your `.vimrc`.
 1. Open a markdown file in vim and enjoy!
@@ -33,7 +34,7 @@ markdown](https://help.github.com/articles/github-flavored-markdown).
    will save html file automatically when saving markdown file.
 
 ##Screenshot
-![MarkdownViewer Screenshot](./markdown_viewer.png)
+![MarkdownViewer Screenshot](markdown_viewer.png)
 
 ##Next
 1. add highlight for code
