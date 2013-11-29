@@ -1,7 +1,10 @@
 "
 " preview.vim  in ftplugin/markdown/
 "
-" Providing `:ViewMarkDown` command.
+" Providing commands:
+"
+" :ViewMkd
+" :M2html
 "
 "
 
@@ -16,14 +19,10 @@ set cpo&vim
 let s:scriptPath = expand('<sfile>:hp')
 
 let s:saveHtml = 1
-if exists('g:mdv_save_html')
-    let s:saveHtml = g:mdv_save_html
+if exists('g:mdv_html')
+    let s:saveHtml = g:mdv_html
 endif
 
-let s:autoSave = 1
-if exists('g:mdv_auto_save')
-    let s:autoSave = g:mdv_auto_save
-endif
 
 let s:defaultTheme = 'github2'
 let s:theme = 'github2'
@@ -102,7 +101,10 @@ function! s:WriteHtml()
     if s:saveHtml
         let fileName = expand('%p') . '.html'
     else
-        let fileName = tempname()
+        if !exists(b:tempFile)
+            let b:tempFile = tempname()
+        endif
+        let fileName = b:tempFile
     endif
     call writefile(html, fileName, '')
     return fileName
@@ -114,16 +116,10 @@ function! s:ViewMarkDown()
     call s:OpenFile(filePath)
 endfunction
 
-command -nargs=0 ViewMarkDown call s:ViewMarkDown()
-
-if s:saveHtml
-    command -nargs=0 Save2Html call s:WriteHtml()
-    if s:autoSave
-        " use BufWritePre instead of BufWritePost
-        autocmd BufWritePre *.mkd,*.md,*.markdown  :Save2Html
-    endif
-endif
-
+command -nargs=0 ViewMkd call s:ViewMarkDown()
+command -nargs=0 M2html call s:WriteHtml()
+" use BufWritePre instead of BufWritePost
+autocmd BufWritePre *.mkd,*.md,*.markdown  :M2html
 
 
 let &cpo = s:save_cpo

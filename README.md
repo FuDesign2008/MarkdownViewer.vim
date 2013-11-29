@@ -19,19 +19,19 @@ markdown](https://help.github.com/articles/github-flavored-markdown).
 1. `g:mdv_theme` , the theme of html file. The default value is `github2` and
    available value are `github2`, `github`, `clear` and `clearDark`.
 
-1. `g:mdv_save_html`, save the html file at the directory which the  markdown
-   file is in. The default value is `1`.
-
-1. `g:mdv_auto_save`, If html will be saved, this option will save the html
-   automatically when saving the markdown file.  The default value is `1`.
+1. `g:mdv_html`, save the html file at the directory where the  markdown
+   file is in when calling `:ViewMkd` command and/or when saving mardown
+   file. The default value is `1`.
 
 
 ##Usage
-1. `:ViewMarkdown`, to preview markdown file. The default key map `<leader>v`
+1. `:ViewMkd`, to preview markdown file. The default key map `<leader>v`
    calls this command.
-1. `:Save2Html`, saving html under the directory which the markdown file is in
-   only if `g:mdv_save_html` is `1`. If `g:mdv_auto_save` is `1`, the pluin
-   will save html file automatically when saving markdown file.
+
+1. `:M2html`, converting markdown file to html file.  If `g:mdv_html` is `1`,
+    the html file will be located in  the directory where the markdown file is in.
+    If the value is `0` , the html file will be a temp file that will be shown
+    in browser when calling `:ViewMkd` command.
 
 ##Screenshot
 ![MarkdownViewer Screenshot](markdown_viewer.png)
