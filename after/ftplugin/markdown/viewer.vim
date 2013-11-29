@@ -101,8 +101,8 @@ function! s:WriteHtml()
     if s:saveHtml
         let fileName = expand('%p') . '.html'
     else
-        if !exists(b:tempFile)
-            let b:tempFile = tempname()
+        if !exists('b:tempFile')
+            let b:tempFile = tempname() . '.html'
         endif
         let fileName = b:tempFile
     endif
