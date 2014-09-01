@@ -125,7 +125,7 @@ function! s:ViewMarkDown()
 endfunction
 
 function! s:Markdown2Html()
-    call s:WriteHtml(1);
+    call s:WriteHtml(1)
 endfunction
 
 command -nargs=0 ViewMkd call s:ViewMarkDown()
