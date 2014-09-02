@@ -131,10 +131,8 @@ endfunction
 command -nargs=0 ViewMkd call s:ViewMarkDown()
 command -nargs=0 M2html call s:Markdown2Html()
 
-if s:saveHtml
-    " use BufWritePre instead of BufWritePost
-    autocmd BufWritePre *.mkd,*.md,*.markdown  :M2html
-endif
+" use BufWritePre instead of BufWritePost
+autocmd FileType markdown autocmd BufWritePre  <buffer> :call s:WriteHtml(0)
 
 
 let &cpo = s:save_cpo
