@@ -89,9 +89,8 @@ endfunction
 
 "
 "write html to file
-"@param {Boolean} force force write to current directory
 "@return {String}  the path of writed file
-function! s:WriteHtml(force)
+function! s:WriteHtml()
     let text = getline(1, '$')
     let tempMarkdown = tempname()
     call writefile(text, tempMarkdown, '')
@@ -108,31 +107,32 @@ function! s:WriteHtml(force)
         let fileName = b:tempFile
 
         "force write to current directory
-        if a:force
+        if exists('b:autosave') && b:autosave
             let nameInCurDir = expand('%p') . '.html'
             call writefile(html, nameInCurDir, '')
         endif
-
     endif
+
     call writefile(html, fileName, '')
     return fileName
 endfunction
 
 
 function! s:ViewMarkDown()
-    let filePath = s:WriteHtml(0)
+    let filePath = s:WriteHtml()
     call s:OpenFile(filePath)
 endfunction
 
 function! s:Markdown2Html()
-    call s:WriteHtml(1)
+    let b:autosave = 1
+    call s:WriteHtml()
 endfunction
 
 command -nargs=0 ViewMkd call s:ViewMarkDown()
 command -nargs=0 M2html call s:Markdown2Html()
 
 " use BufWritePre instead of BufWritePost
-autocmd FileType markdown autocmd BufWritePre  <buffer> :call s:WriteHtml(0)
+autocmd BufWritePre *.md,*.mkd,*.markdown  :call s:WriteHtml()
 
 
 let &cpo = s:save_cpo
