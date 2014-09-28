@@ -38,7 +38,7 @@ function! s:OpenFile(filePath)
     if has('mac')
         let cmdStr = 'open ' . path
     elseif has('win32') || has('win64') || has('win95') || has('win16')
-        let cmdStr = '/c start ' . path
+        let cmdStr = 'cmd /c start "" ' . path
     else
         echomsg "Can NOT open " . a:filePath
         return
