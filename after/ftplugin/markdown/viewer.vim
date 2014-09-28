@@ -31,15 +31,22 @@ if exists('g:mdv_theme')
 endif
 
 function! s:OpenFile(filePath)
+
+    let path = shellescape(a:filePath)
+    let cmdStr = ''
+
     if has('mac')
-        "let cmd = 'silent !open "' . a:filePath  . '"'
-        let cmd = 'open "' . a:filePath  . '"'
+        let cmdStr = 'open ' . path
     elseif has('win32') || has('win64') || has('win95') || has('win16')
-        "let cmd = '!cmd /c start "' . a:filePath . '"'
-        let cmd = '/c start "' . a:filePath . '"'
+        let cmdStr = '/c start ' . path
+    else
+        echomsg "Can NOT open " . a:filePath
+        return
     endif
-    "execute cmd
-    call system(cmd)
+
+    call system(cmdStr)
+    echo cmdStr
+
 endfunction
 
 " reuturn {String}
