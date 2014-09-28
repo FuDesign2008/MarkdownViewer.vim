@@ -36,7 +36,11 @@ function! s:OpenFile(filePath)
     let cmdStr = ''
 
     if has('mac')
-        let cmdStr = 'open ' . path
+        let cmdStr = 'open -a Safari ' . path
+        let findStr = system('ls /Applications/ | grep -i google\ chrome')
+        if strlen(findStr) > 5
+            let cmdStr = 'open -a Google\ Chrome ' . path
+        endif
     elseif has('win32') || has('win64') || has('win95') || has('win16')
         let cmdStr = 'cmd /c start "" ' . path
     else
