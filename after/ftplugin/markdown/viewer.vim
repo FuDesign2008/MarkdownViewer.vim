@@ -90,12 +90,12 @@ function s:Convert2Html(theme, content)
     endif
     "echo html
     "echo style
+
     let html  = substitute(html, '{{style}}', style, '')
-    let html  = substitute(html, '{{title}}', title, '')
-    let html  = substitute(html, '{{content}}', escape(a:content, ' &'), '')
-    "echo  html
+    let html  = substitute(html, '{{title}}', escape(title, '&\'), '')
+    let html  = substitute(html, '{{content}}', escape(a:content, '&\'), '')
+
     return split(html, '\n')
-    "return split(a:content, '\n')
 endfunction
 
 "
