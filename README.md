@@ -6,23 +6,16 @@ markdown](https://help.github.com/articles/github-flavored-markdown).
 
 ##Install
 1. Install `node.js` and `npm`.
-1. Install `marked` globally, `npm install marked -g` or `sudo npm install
-   marked -g`.
+
+1. Install `npm` packages globally
+    * Install `marked` globally, `npm install marked -g` or `sudo npm install marked -g`.
+    * Install `highlight.js` globally, `npm install highlight.js -g` or `sudo npm install highlight.js -g`.
+
 1. Copy the `after` folder to `~/.vim`.
+
 1. Ensure you have the line `filetype plugin on` in your `.vimrc`.
-1. Open a markdown file in vim and enjoy!
 
-##Config Options
-1. `g:mdv_loaded`, the plugin has loaded or not.The default value is `0`. If
-   you want to prevent loading the plugin, you can set it to `1` in `.vimrc`.
-
-1. `g:mdv_theme` , the theme of html file. The default value is `github2` and
-   available value are `github2`, `github`, `clear` and `clearDark`.
-
-1. `g:mdv_html`, save the html file at the directory where the  markdown
-   file is in when calling `:ViewMkd` command and/or when saving mardown
-   file. The default value is `1`.
-
+1. Open a markdown file in `vim` and execute command `:ViewMkd`. Enjoy it!
 
 ##Usage
 1. `:ViewMkd`, to preview markdown file. The default key map `<leader>v`
@@ -36,13 +29,46 @@ markdown](https://help.github.com/articles/github-flavored-markdown).
 ##Screenshot
 ![MarkdownViewer Screenshot](markdown_viewer.png)
 
-##Next
-1. add highlight for code
 
-```js
-var hello = "Hello";
-console.log(hello);
-```
+##Configuration
+1. `g:mdv_loaded`, the plugin has loaded or not.The default value is `0`. If
+   you want to prevent loading the plugin, you can set it to `1` in `.vimrc`.
+
+1. `g:mdv_theme` , the theme of html file. The default value is `github2` and
+   available values are :
+    * `github2`
+    * `github`
+    * `clear`
+    * `clearDark`
+
+1. `g:mdv_html`, save the html file at the directory where the  markdown
+   file is in when calling `:ViewMkd` command and/or when saving markdown
+   file. The default value is `1`.
+
+1. `g:mdv_highlight_code`, to highlight code or not, default value is `1`. If
+   you want to prevent to highlight code, you can set it to `0` in `.vimrc`.
+
+1. `g:mdv_code_theme`, the theme of code in html file. The default value is
+   `default`. The possible values are :
+    * `default`
+    * `github`
+    * `mono-blue`
+    * `monokai`
+    * `monokai_sublime`
+    * `solarized_dark`
+    * `solarized_light`
+    * `zenburn`
+
+
+##Update
+
+* 2015-01-15
+    * add highlight for code
+
+##Next
+1. ~~add highlight for code~~
+1. better image support
+
 
 
 

@@ -23,11 +23,21 @@ if exists('g:mdv_html')
     let s:saveHtml = g:mdv_html
 endif
 
-
 let s:defaultTheme = 'github2'
 let s:theme = 'github2'
 if exists('g:mdv_theme')
     let s:theme = g:mdv_theme
+endif
+
+let s:highlightCode = 1
+if exists('g:mdv_highlight_code')
+    let s:highlightCode = g:mdv_highlight_code
+endif
+
+let s:defaultCodeTheme = 'default'
+let s:codeTheme = 'default'
+if exists('g:mdv_code_theme')
+    let s:codeTheme = g:mdv_code_theme
 endif
 
 function! s:OpenFile(filePath)
@@ -80,27 +90,28 @@ endfunction
 "
 "@param {String} theme
 "@param {String} content
-"@param {String} hljs_theme
 "@return {List}
-function s:Convert2Html(theme, content, hljs_theme)
+function s:Convert2Html(theme, content)
     let html = ''
-    if strlen(hljs_theme) > 0
+    if s:highlightCode
         let html = s:ReadFile('/bone_hljs.html', '')
-        let hljs_css = s:ReadFile('/highlightjs/css/' . theme . '.min.css')
-        let hljs_js = s:ReadFile('/highlightjs/highlight.js')
 
-        let html = substitute(html, '{{hljs-css}}', hljs_css, '')
+        let hljs_css = s:ReadFile('/hljs/css/' . s:codeTheme . '.min.css', '')
+        if strlen(hljs_css) < 1
+            let hljs_css = s:ReadFile('/hljs/css/'. s:defaultCodeTheme . '.min.css', '')
+        endif
+
         let html = substitute(html, '{{hljs-css}}', hljs_css, '')
     else
         let html = s:ReadFile('/bone.html', '')
     endif
 
-    let style = s:ReadFile('/' . a:theme . '.css', '\n')
+    let cssSuffix = s:highlightCode ? '-hljs.css' : '.css'
+
+    let style = s:ReadFile('/' . a:theme . cssSuffix, '\n')
     if len(style) < 1
-        let style = s:ReadFile('/' . s:defaultTheme . '.css', '\n')
+        let style = s:ReadFile('/' . s:defaultTheme . cssSuffix, '\n')
     endif
-    "echo html
-    "echo style
 
     let title = s:GetTitle(a:content)
     let html  = substitute(html, '{{style}}', style, '')
@@ -114,13 +125,20 @@ endfunction
 "write html to file
 "@return {String}  the path of writed file
 function! s:WriteHtml()
-    let text = getline(1, '$')
+    let lineList = getline(1, '$')
     let tempMarkdown = tempname()
-    call writefile(text, tempMarkdown, '')
-    "echomsg text
-    let parsed = system('marked  --input ' . shellescape(tempMarkdown))
-    "echo type(parsed)
-    let html = s:Convert2Html(s:theme, parsed, '')
+    call writefile(lineList, tempMarkdown, '')
+
+    let str_cmd = 'marked  --input ' . shellescape(tempMarkdown)
+
+    if s:highlightCode
+        let markedJS = shellescape(s:scriptPath . '/marked-hljs.js')
+        let str_cmd = 'node ' . markedJS . ' ' . shellescape(tempMarkdown)
+    endif
+
+    let parsed = system(str_cmd)
+    let html = s:Convert2Html(s:theme, parsed)
+
     if s:saveHtml
         let fileName = expand('%p') . '.html'
     else
