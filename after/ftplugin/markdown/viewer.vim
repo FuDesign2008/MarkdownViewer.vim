@@ -96,9 +96,9 @@ function s:Convert2Html(theme, content)
     if s:highlightCode
         let html = s:ReadFile('/bone_hljs.html', '')
 
-        let hljs_css = s:ReadFile('/hljs/css/' . s:codeTheme . '.min.css', '')
+        let hljs_css = s:ReadFile('/hljs/styles/' . s:codeTheme . '.css', '')
         if strlen(hljs_css) < 1
-            let hljs_css = s:ReadFile('/hljs/css/'. s:defaultCodeTheme . '.min.css', '')
+            let hljs_css = s:ReadFile('/hljs/styles/'. s:defaultCodeTheme . '.css', '')
         endif
 
         let html = substitute(html, '{{hljs-css}}', hljs_css, '')

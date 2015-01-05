@@ -49,15 +49,52 @@ markdown](https://help.github.com/articles/github-flavored-markdown).
 
 1. `g:mdv_code_theme`, the theme of code in html file. The default value is
    `default`. The possible values are :
+    * `arta`
+    * `ascetic`
+    * `atelier-dune.dark`
+    * `atelier-dune.light`
+    * `atelier-forest.dark`
+    * `atelier-forest.light`
+    * `atelier-heath.dark`
+    * `atelier-heath.light`
+    * `atelier-lakeside.dark`
+    * `atelier-lakeside.light`
+    * `atelier-seaside.dark`
+    * `atelier-seaside.light`
+    * `codepen-embed`
+    * `color-brewer`
+    * `dark`
     * `default`
+    * `docco`
+    * `far`
+    * `foundation`
     * `github`
+    * `googlecode`
+    * `hybrid`
+    * `idea`
+    * `ir_black`
+    * `kimbie.dark`
+    * `kimbie.light`
+    * `magula`
     * `mono-blue`
     * `monokai`
     * `monokai_sublime`
+    * `obsidian`
+    * `paraiso.dark`
+    * `paraiso.light`
+    * `railscasts`
+    * `rainbow`
     * `solarized_dark`
     * `solarized_light`
+    * `sunburst`
+    * `tomorrow-night-blue`
+    * `tomorrow-night-bright`
+    * `tomorrow-night-eighties`
+    * `tomorrow-night`
+    * `tomorrow`
+    * `vs`
+    * `xcode`
     * `zenburn`
-
 
 ##Update
 
