@@ -6,15 +6,14 @@ markdown](https://help.github.com/articles/github-flavored-markdown).
 
 ##Install
 1. Install `node.js` and `npm`.
-
-1. Install `npm` packages globally
-    * Install `marked` globally, `npm install marked -g` or `sudo npm install marked -g`.
-    * Install `highlight.js` globally, `npm install highlight.js -g` or `sudo npm install highlight.js -g`.
-
+1. Install `marked` and `highlight.js` packages globally
+    * `npm install marked -g` or `sudo npm install marked -g`
+    * `npm install highlight.js -g` or `sudo npm install highlight.js -g`
+1. Set `NODE_PATH` environment variable
+    * add `export NODE_PATH=/usr/lib/node_modules:$NODE_PATH` to ` ~/.bash_profile` or `~/.zshrc`
+    * See http://stackoverflow.com/questions/13465829/node-js-modules-path for more infomation
 1. Copy the `after` folder to `~/.vim`.
-
 1. Ensure you have the line `filetype plugin on` in your `.vimrc`.
-
 1. Open a markdown file in `vim` and execute command `:ViewMkd`. Enjoy it!
 
 ##Usage
