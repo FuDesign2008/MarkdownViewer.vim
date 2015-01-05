@@ -1,5 +1,5 @@
 "
-" preview.vim  in ftplugin/markdown/
+" viewer.vim  in ftplugin/markdown/
 "
 " Providing commands:
 "
@@ -80,10 +80,21 @@ endfunction
 "
 "@param {String} theme
 "@param {String} content
+"@param {String} hljs_theme
 "@return {List}
-function s:Convert2Html(theme, content)
-    let title = s:GetTitle(a:content)
-    let html = s:ReadFile('/bone.html', '')
+function s:Convert2Html(theme, content, hljs_theme)
+    let html = ''
+    if strlen(hljs_theme) > 0
+        let html = s:ReadFile('/bone_hljs.html', '')
+        let hljs_css = s:ReadFile('/highlightjs/css/' . theme . '.min.css')
+        let hljs_js = s:ReadFile('/highlightjs/highlight.js')
+
+        let html = substitute(html, '{{hljs-css}}', hljs_css, '')
+        let html = substitute(html, '{{hljs-css}}', hljs_css, '')
+    else
+        let html = s:ReadFile('/bone.html', '')
+    endif
+
     let style = s:ReadFile('/' . a:theme . '.css', '\n')
     if len(style) < 1
         let style = s:ReadFile('/' . s:defaultTheme . '.css', '\n')
@@ -91,6 +102,7 @@ function s:Convert2Html(theme, content)
     "echo html
     "echo style
 
+    let title = s:GetTitle(a:content)
     let html  = substitute(html, '{{style}}', style, '')
     let html  = substitute(html, '{{title}}', escape(title, '&\'), '')
     let html  = substitute(html, '{{content}}', escape(a:content, '&\'), '')
@@ -108,7 +120,7 @@ function! s:WriteHtml()
     "echomsg text
     let parsed = system('marked  --input ' . shellescape(tempMarkdown))
     "echo type(parsed)
-    let html = s:Convert2Html(s:theme, parsed)
+    let html = s:Convert2Html(s:theme, parsed, '')
     if s:saveHtml
         let fileName = expand('%p') . '.html'
     else

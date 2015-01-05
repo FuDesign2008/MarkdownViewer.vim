@@ -39,5 +39,10 @@ markdown](https://help.github.com/articles/github-flavored-markdown).
 ##Next
 1. add highlight for code
 
+```js
+var hello = "Hello";
+console.log(hello);
+```
+
 
 
