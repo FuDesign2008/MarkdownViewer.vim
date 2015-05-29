@@ -191,8 +191,8 @@ function! s:Mail(name)
         return
     endif
 
-    if !exists('g:mail_mkd_config')
-        let path = expand('~/mail.vim')
+    if !exists('g:mdv_mail_config')
+        let path = expand('~/mdv_mail_config.vim')
         if filereadable(path)
             exec ':so ' . path
         else
@@ -201,14 +201,14 @@ function! s:Mail(name)
         endif
     endif
 
-    if !exists('g:mail_mkd_config')
-        echomsg 'g:mail_mkd_config does not exist!'
+    if !exists('g:mdv_mail_config')
+        echomsg 'g:mdv_mail_config does not exist!'
         return
     endif
 
-    let config = get(g:mail_mkd_config, a:name, {})
+    let config = get(g:mdv_mail_config, a:name, {})
     if !has_key(config, 'from') || !has_key(config, 'to') || !has_key(config, 'server_host') || !has_key(config, 'server_port')
-        echomsg 'The g:mail_mkd_config[`'. a:name .'`] is not valid!'
+        echomsg 'The g:mdv_mail_config[`'. a:name .'`] is not valid!'
         return
     endif
 

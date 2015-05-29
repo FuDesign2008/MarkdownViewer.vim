@@ -25,6 +25,10 @@ markdown](https://help.github.com/articles/github-flavored-markdown).
     If the value is `0` , the html file will be a temp file that will be shown
     in browser when calling `:ViewMkd` command.
 
+1. `:MailMkd config-name`, send an email with the html content which is from the markdown
+   file to someone. This command needs python support and the
+   `g:mdv_mail_config` should be set.
+
 ##Screenshot
 ![MarkdownViewer Screenshot](markdown_viewer.png)
 
@@ -96,13 +100,49 @@ markdown](https://help.github.com/articles/github-flavored-markdown).
     * `xcode`
     * `zenburn`
 
-##Update
+1. `g:mdv_mail_config`, the configuration for `:MailMkd` command. All the
+   configuration should be written in `~/mdv_mail_config.vim`. Below is an
+   example:
+
+```vimscript
+
+" ~/mdv_mail_config.vim
+
+let g:mdv_mail_config = {}
+
+let g:mdv_mail_config['example'] = {
+    \ 'from': 'abc@example.com',
+    \ 'to': ['xyz@example.com'],
+    \ 'cc': ['mnq@example.com'],
+    \ 'server_host': 'smtp.example.com',
+    \ 'server_port': 25,
+    \ 'login_name': 'abc@example.com',
+    \ 'login_pwd': 'the-password'
+    \ }
+
+let g:mdv_mail_config['example2'] = {
+    \ 'from': 'abc2@example.com',
+    \ 'to': ['xyz2@example.com'],
+    \ 'cc': [],
+    \ 'server_host': 'smtp.example.com',
+    \ 'server_port': 25,
+    \ 'login_name': 'abc2@example.com',
+    \ 'login_pwd': 'the-password-2'
+    \ }
+
+```
+
+Then, executing `:MailMkd example` command will use the `example` configuration
+to mail the current file content to `xyz@example.com`.
+
+##Change Log
+* 2015-05-29
+    - add `:MailMkd` command
 
 * 2015-01-15
-    * add highlight for code
+    - add highlight for code
 
 ##Next
-1. ~~add highlight for code~~
 1. better image support
 
 
