@@ -90,8 +90,8 @@ endfunction
 "
 "@param {String} theme
 "@param {String} content
-"@return {List}
-function s:Convert2Html(theme, content)
+"@return {Dictionary} dict.title, dict.html_lines
+function s:MakeUpHtml(theme, content)
     let html = ''
     if s:highlightCode
         let html = s:ReadFile('/bone_hljs.html', '')
@@ -118,13 +118,14 @@ function s:Convert2Html(theme, content)
     let html  = substitute(html, '{{title}}', escape(title, '&\'), '')
     let html  = substitute(html, '{{content}}', escape(a:content, '&\'), '')
 
-    return split(html, '\n')
+    let lines = split(html, '\n')
+
+    let ret_dict = {'title': title, 'html_lines': lines}
+    return ret_dict
 endfunction
 
-"
-"write html to file
-"@return {String}  the path of writed file
-function! s:WriteHtml()
+"@return {String}
+function! s:ParseContent()
     let lineList = getline(1, '$')
     let tempMarkdown = tempname()
     call writefile(lineList, tempMarkdown, '')
@@ -137,7 +138,22 @@ function! s:WriteHtml()
     endif
 
     let parsed = system(str_cmd)
-    let html = s:Convert2Html(s:theme, parsed)
+    return parsed
+endfunction
+
+"@return {Dictionary} dict.title, dict.html_lines
+function! s:Convert2Html()
+    let parsed = s:ParseContent()
+    let dict = s:MakeUpHtml(s:theme, parsed)
+    return dict
+endfunction
+
+"
+"write html to file
+"@return {String}  the path of writed file
+function! s:WriteHtml()
+    let dict = s:Convert2Html()
+    let lines = get(dict, 'html_lines', [])
 
     if s:saveHtml
         let fileName = expand('%p') . '.html'
@@ -150,11 +166,11 @@ function! s:WriteHtml()
         "force write to current directory
         if exists('b:autosave') && b:autosave
             let nameInCurDir = expand('%p') . '.html'
-            call writefile(html, nameInCurDir, '')
+            call writefile(lines, nameInCurDir, '')
         endif
     endif
 
-    call writefile(html, fileName, '')
+    call writefile(lines, fileName, '')
     return fileName
 endfunction
 
@@ -169,8 +185,106 @@ function! s:Markdown2Html()
     call s:WriteHtml()
 endfunction
 
+function! s:Mail(name)
+    if !has('python')
+        echomsg "Mail needs python support!"
+        return
+    endif
+
+    if !exists('g:mail_mkd_config')
+        let path = expand('~/mail.vim')
+        if filereadable(path)
+            exec ':so ' . path
+        else
+            echomsg 'File `~/mail.vim` does not exist or is not readable!'
+            return
+        endif
+    endif
+
+    if !exists('g:mail_mkd_config')
+        echomsg 'g:mail_mkd_config does not exist!'
+        return
+    endif
+
+    let config = get(g:mail_mkd_config, a:name, {})
+    if !has_key(config, 'from') || !has_key(config, 'to') || !has_key(config, 'server_host') || !has_key(config, 'server_port')
+        echomsg 'The g:mail_mkd_config[`'. a:name .'`] is not valid!'
+        return
+    endif
+
+    let mail_from = get(config, 'from')
+    let mail_to = get(config, 'to')
+    let mail_cc = get(config, 'cc', [])
+    let server_host = get(config, 'server_host')
+    let server_port = get(config, 'server_port')
+    let login_name = get(config, 'login_name', '')
+    let login_pwd = get(config, 'login_pwd', '')
+
+    let html = s:ParseContent()
+    let title = s:GetTitle(html)
+
+    "0 - initial status
+    "1 - mail send ok
+    "2 - mail send error
+    let g:mail_mkd_status = 0
+
+python << EOF
+# encoding:utf-8
+
+import sys
+reload(sys)
+sys.setdefaultencoding('utf-8')
+
+import vim
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+
+sender = vim.eval('mail_from')
+to_address_list = vim.eval('mail_to')
+cc_address_list = vim.eval('mail_cc')
+server_address = vim.eval('server_host')
+server_port = vim.eval('server_port')
+login_name = vim.eval('login_name')
+login_pwd = vim.eval('login_pwd')
+
+subject = vim.eval('title')
+content = vim.eval('html')
+
+if not isinstance(subject, unicode):
+    subject = unicode(subject)
+
+
+msg = MIMEMultipart('alternative')
+msg['Subject'] = subject
+msg['From'] = sender
+msg['To'] = ','.join(to_address_list)
+msg['CC'] = ','.join(cc_address_list)
+
+mime_text = MIMEText(content, 'html', 'utf-8')
+msg.attach(mime_text)
+
+try:
+    server = smtplib.SMTP(server_address, server_port)
+    server.login(login_name, login_pwd)
+    server.sendmail(sender, to_address_list + cc_address_list, msg.as_string())
+    server.quit()
+    vim.command('let g:mail_mkd_status=1')
+except smtplib.SMTPException:
+    vim.command('let g:mail_mkd_status=2')
+EOF
+
+if g:mail_mkd_status == 1
+    echomsg 'Mail sent OK!'
+else
+    echomsg 'Failed to send mail!'
+endif
+
+endfunction
+
 command -nargs=0 ViewMkd call s:ViewMarkDown()
 command -nargs=0 M2html call s:Markdown2Html()
+command -nargs=1 MailMkd call s:Mail(<f-args>)
 
 " use BufWritePre instead of BufWritePost
 autocmd BufWritePre *.md,*.mkd,*.markdown  :call s:WriteHtml()
