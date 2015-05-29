@@ -206,9 +206,12 @@ function! s:Mail(name)
         return
     endif
 
-    let config = get(g:mdv_mail_config, a:name, {})
+    let config_name = substitute(a:name, '^\s*', '', '')
+    let config_name = substitute(config_name, '\s*$', '', '')
+
+    let config = get(g:mdv_mail_config, config_name, {})
     if !has_key(config, 'from') || !has_key(config, 'to') || !has_key(config, 'server_host') || !has_key(config, 'server_port')
-        echomsg 'The g:mdv_mail_config[`'. a:name .'`] is not valid!'
+        echomsg 'The g:mdv_mail_config[`'. config_name .'`] is not valid!'
         return
     endif
 
