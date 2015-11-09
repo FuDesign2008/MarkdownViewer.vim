@@ -68,6 +68,12 @@ fs.readFile(filePath, {
     });
 
     try {
+
+      // FIX https://github.com/chjj/marked/issues/642
+      data = data.replace(/^(#+)([^ #])/mg, function (all, $1, $2) {
+        return $1 + ' ' + $2;
+      });
+
       parsed = marked(data);
       //parsed = marked('I am using __markdown__.');
     } catch (ex) {

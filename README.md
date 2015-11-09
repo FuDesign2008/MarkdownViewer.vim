@@ -136,6 +136,9 @@ Then, executing `:MailMkd example` command will use the `example` configuration
 to mail the current file content to `xyz@example.com`.
 
 ##Change Log
+* 2015-11-09
+    - bug fix for heading, see https://github.com/chjj/marked/issues/642
+
 * 2015-05-29
     - add `:MailMkd` command
 
