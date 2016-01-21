@@ -1,11 +1,6 @@
 "
 " viewer.vim  in ftplugin/markdown/
 "
-" Providing commands:
-"
-" :ViewMkd
-" :M2html
-"
 "
 
 
@@ -18,26 +13,18 @@ set cpo&vim
 
 let s:scriptPath = expand('<sfile>:hp')
 
-let s:saveHtml = 1
-if exists('g:mdv_html')
-    let s:saveHtml = g:mdv_html
+let s:theme_default = 'github2'
+if !exists('g:mdv_theme')
+    let g:mdv_theme = s:theme_default
 endif
 
-let s:defaultTheme = 'github2'
-let s:theme = 'github2'
-if exists('g:mdv_theme')
-    let s:theme = g:mdv_theme
+if !exists('g:mdv_highlight_code')
+    let g:mdv_highlight_code = 1
 endif
 
-let s:highlightCode = 1
-if exists('g:mdv_highlight_code')
-    let s:highlightCode = g:mdv_highlight_code
-endif
-
-let s:defaultCodeTheme = 'default'
-let s:codeTheme = 'default'
-if exists('g:mdv_code_theme')
-    let s:codeTheme = g:mdv_code_theme
+let s:code_theme_default = 'default'
+if !exists('g:mdv_code_theme')
+    let g:mdv_code_theme = s:code_theme_default
 endif
 
 function! s:OpenFile(filePath)
@@ -92,30 +79,34 @@ endfunction
 "@param {String} content
 "@return {Dictionary} dict.title, dict.html_lines
 function s:MakeUpHtml(theme, content)
-    let html = ''
-    if s:highlightCode
-        let html = s:ReadFile('/bone_hljs.html', '')
 
-        let hljs_css = s:ReadFile('/hljs/styles/' . s:codeTheme . '.css', '')
+    let read_theme = a:theme
+    let style = s:ReadFile('/css/' . read_theme . '.css', '\n')
+    if len(style) < 1
+        read_theme = s:theme_default
+        let style = s:ReadFile('/css/' . read_theme . '.css', '\n')
+    endif
+
+    let hljs_css = ''
+    if g:mdv_highlight_code
+        let hljs_css = s:ReadFile('/css/hljs/' . g:mdv_code_theme . '.css', '')
         if strlen(hljs_css) < 1
-            let hljs_css = s:ReadFile('/hljs/styles/'. s:defaultCodeTheme . '.css', '')
+            let hljs_css = s:ReadFile('/css/hljs/'. s:code_theme_default . '.css', '')
         endif
 
-        let html = substitute(html, '{{hljs-css}}', hljs_css, '')
-    else
-        let html = s:ReadFile('/bone.html', '')
+        let style_fix =  s:ReadFile('/css/' . read_theme . '-hljs.css', '\n')
+        let style = style . style_fix
     endif
 
-    let cssSuffix = s:highlightCode ? '-hljs.css' : '.css'
+    let mermaid_js = let style_fix =  s:ReadFile('/js/mermaid.min.js', '\n')
 
-    let style = s:ReadFile('/' . a:theme . cssSuffix, '\n')
-    if len(style) < 1
-        let style = s:ReadFile('/' . s:defaultTheme . cssSuffix, '\n')
-    endif
+    let html = s:ReadFile('/bone.html', '')
 
     let title = s:GetTitle(a:content)
-    let html  = substitute(html, '{{style}}', style, '')
     let html  = substitute(html, '{{title}}', escape(title, '&\'), '')
+    let html  = substitute(html, '{{style}}', style, '')
+    let html = substitute(html, '{{hljs-css}}', hljs_css, '')
+    let html = substitute(html, '{{mermaid}}', mermaid_js, '')
     let html  = substitute(html, '{{content}}', escape(a:content, '&\'), '')
 
     let lines = split(html, '\n')
@@ -130,12 +121,9 @@ function! s:ParseContent()
     let tempMarkdown = tempname()
     call writefile(lineList, tempMarkdown, '')
 
-    let str_cmd = 'marked  --input ' . shellescape(tempMarkdown)
-
-    if s:highlightCode
-        let markedJS = shellescape(s:scriptPath . '/marked-hljs.js')
-        let str_cmd = 'node ' . markedJS . ' ' . shellescape(tempMarkdown)
-    endif
+    let viewer_js = shellescape(s:scriptPath . '/viewer.js')
+    let is_highlight_code = g:mdv_highlight_code ? '1' : '0'
+    let str_cmd = 'node ' . viewer_js . ' ' . shellescape(tempMarkdown) . ' ' . is_highlight_code
 
     let parsed = system(str_cmd)
     return parsed
@@ -144,45 +132,45 @@ endfunction
 "@return {Dictionary} dict.title, dict.html_lines
 function! s:Convert2Html()
     let parsed = s:ParseContent()
-    let dict = s:MakeUpHtml(s:theme, parsed)
+    let dict = s:MakeUpHtml(g:mdv_theme, parsed)
     return dict
 endfunction
 
 "
 "write html to file
-"@return {String}  the path of writed file
-function! s:WriteHtml()
+"@param {Boolean} saveHtml  save html to the folder that include markdown file
+"@return {String} the path of writed file
+function! s:WriteHtml(saveHtml)
     let dict = s:Convert2Html()
     let lines = get(dict, 'html_lines', [])
 
-    if s:saveHtml
-        let fileName = expand('%p') . '.html'
+    if a:saveHtml
+        let filePath = expand('%p') . '.html'
     else
-        if !exists('b:tempFile')
-            let b:tempFile = tempname() . '.html'
+        if !exists('b:temp_html_file')
+            let b:temp_html_file = expand('%p') . '_temp_.html'
         endif
-        let fileName = b:tempFile
-
-        "force write to current directory
-        if exists('b:autosave') && b:autosave
-            let nameInCurDir = expand('%p') . '.html'
-            call writefile(lines, nameInCurDir, '')
-        endif
+        let filePath = b:temp_html_file
     endif
 
-    call writefile(lines, fileName, '')
-    return fileName
+    call writefile(lines, filePath, '')
+    return filePath
+endfunction
+
+function! s:RemoveTempHtml()
+    if exists('b:temp_html_file')
+        call delete(b:temp_html_file)
+    endif
 endfunction
 
 
 function! s:ViewMarkDown()
-    let filePath = s:WriteHtml()
+    let filePath = s:WriteHtml(0)
     call s:OpenFile(filePath)
 endfunction
 
 function! s:Markdown2Html()
-    let b:autosave = 1
-    call s:WriteHtml()
+    call s:WriteHtml(1)
 endfunction
 
 function! s:Mail(name)
@@ -285,12 +273,11 @@ endif
 
 endfunction
 
-command -nargs=0 ViewMkd call s:ViewMarkDown()
-command -nargs=0 M2html call s:Markdown2Html()
-command -nargs=1 MailMkd call s:Mail(<f-args>)
+command -nargs=0 MkdView call s:ViewMarkDown()
+command -nargs=0 Mkd2html call s:Markdown2Html()
+command -nargs=1 MkdMail call s:Mail(<f-args>)
 
-" use BufWritePre instead of BufWritePost
-autocmd BufWritePre *.md,*.mkd,*.markdown  :call s:WriteHtml()
+autocmd QuitPre *.md,*.mkd,*.markdown     :call s:RemoveTempHtml()
 
 
 let &cpo = s:save_cpo
