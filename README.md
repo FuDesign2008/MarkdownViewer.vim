@@ -127,6 +127,7 @@ to mail the current file content to `xyz@example.com`.
 
 ##Change Log
 * 2016-01-21
+    - Add support for image and mermaid
     - Remove `g:mdv_loaded`, `g:mdv_html`
 * 2015-11-09
     - bug fix for heading, see https://github.com/chjj/marked/issues/642
