@@ -1,0 +1,9 @@
+.highlight pre {
+    background-color: transparent;
+    border: none;
+}
+
+pre {
+    margin: 0;
+    padding: 0;
+}

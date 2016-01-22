@@ -1,0 +1,9 @@
+pre {
+    padding: 0;
+    border: none;
+}
+
+pre code {
+    background-color: transparent;
+    color: inherit;
+}
