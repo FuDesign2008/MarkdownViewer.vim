@@ -1,6 +1,6 @@
 MarkdownViewer.vim
 ===================
-Parse markdown to html and preview it, compatible with [GitHub flavored markdown](https://help.github.com/articles/github-flavored-markdown) and support [http://knsv.github.io/mermaid/index.html](mermaid).
+Parse markdown to html and preview it, compatible with [GitHub flavored markdown](https://help.github.com/articles/github-flavored-markdown) and support [mermaid](http://knsv.github.io/mermaid/index.html).
 
 
 ##Install
