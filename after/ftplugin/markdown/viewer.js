@@ -85,11 +85,12 @@ fs.readFile(filePath, {
       //parsed = marked('I am using __markdown__.');
     } catch (ex) {
       console.log('ERROR: marked to parse markdown content');
+      return;
     }
 
     console.log(parsed);
 
-  });
+});
 
 
 

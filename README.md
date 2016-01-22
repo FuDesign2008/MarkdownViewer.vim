@@ -1,7 +1,6 @@
 MarkdownViewer.vim
 ===================
-Parse markdown to html and preview it, compatible with [GitHub flavored
-markdown](https://help.github.com/articles/github-flavored-markdown).
+Parse markdown to html and preview it, compatible with [GitHub flavored markdown](https://help.github.com/articles/github-flavored-markdown) and support [http://knsv.github.io/mermaid/index.html](mermaid).
 
 
 ##Install
@@ -9,7 +8,6 @@ markdown](https://help.github.com/articles/github-flavored-markdown).
 1. Install `marked` and `highlight.js` packages globally
     * `npm install -g marked`
     * `npm install -g highlight.js`
-    * `npm install -g mermaid`
 1. Set `NODE_PATH` environment variable
     * add `export NODE_PATH=/usr/lib/node_modules:$NODE_PATH` to ` ~/.bash_profile` or `~/.zshrc`
     * See http://stackoverflow.com/questions/13465829/node-js-modules-path for more infomation
@@ -89,6 +87,8 @@ markdown](https://help.github.com/articles/github-flavored-markdown).
     * `vs`
     * `xcode`
     * `zenburn`
+
+1. `g:mdv_mermaid_img`, The `mermaid` renders graph as `svg`. If you want to render the graph as image, you can set this option to `1`. The default value is `0`.
 
 1. `g:mdv_mail_config`, the configuration for `:MkdMail` command. All the
    configuration should be written in `~/mdv_mail_config.vim`. Below is an

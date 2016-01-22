@@ -94,20 +94,25 @@ function s:MakeUpHtml(theme, content)
             let hljs_css = s:ReadFile('/css/hljs/'. s:code_theme_default . '.css', '')
         endif
 
-        let style_fix =  s:ReadFile('/css/' . read_theme . '-hljs.css', '\n')
+        let style_fix = s:ReadFile('/css/' . read_theme . '-hljs.css', '')
         let style = style . style_fix
     endif
 
-    let mermaid_js = let style_fix =  s:ReadFile('/js/mermaid.min.js', '\n')
+    let mermaid_path = s:scriptPath . '/js/mermaid.min.js'
 
     let html = s:ReadFile('/bone.html', '')
 
     let title = s:GetTitle(a:content)
-    let html  = substitute(html, '{{title}}', escape(title, '&\'), '')
-    let html  = substitute(html, '{{style}}', style, '')
+    let html = substitute(html, '{{title}}', escape(title, '&\'), '')
+    let html = substitute(html, '{{style}}', style, '')
     let html = substitute(html, '{{hljs-css}}', hljs_css, '')
-    let html = substitute(html, '{{mermaid}}', mermaid_js, '')
-    let html  = substitute(html, '{{content}}', escape(a:content, '&\'), '')
+    let html = substitute(html, '{{mermaid-path}}', mermaid_path, '')
+    let html = substitute(html, '{{content}}', escape(a:content, '&\'), '')
+
+    if exists('g:mdv_mermaid_img') && g:mdv_mermaid_img
+        let html = substitute(html, '{{svg-2-img}}', 'true', '')
+    endif
+
 
     let lines = split(html, '\n')
 
@@ -139,22 +144,23 @@ endfunction
 "
 "write html to file
 "@param {Boolean} saveHtml  save html to the folder that include markdown file
-"@return {String} the path of writed file
-function! s:WriteHtml(saveHtml)
+function! s:WriteHtml()
+
+    if !exists('b:temp_html_file') && !exists('b:save_html_file')
+        return
+    endif
+
     let dict = s:Convert2Html()
     let lines = get(dict, 'html_lines', [])
 
-    if a:saveHtml
-        let filePath = expand('%p') . '.html'
-    else
-        if !exists('b:temp_html_file')
-            let b:temp_html_file = expand('%p') . '_temp_.html'
-        endif
-        let filePath = b:temp_html_file
+    if exists('b:temp_html_file')
+        call writefile(lines, b:temp_html_file, '')
     endif
 
-    call writefile(lines, filePath, '')
-    return filePath
+    if exists('b:save_html_file')
+        call writefile(lines, b:save_html_file, '')
+    endif
+
 endfunction
 
 function! s:RemoveTempHtml()
@@ -165,12 +171,22 @@ endfunction
 
 
 function! s:ViewMarkDown()
-    let filePath = s:WriteHtml(0)
-    call s:OpenFile(filePath)
+    if !exists('b:temp_html_file')
+        let b:temp_html_file = expand('%p') . '_temp_.html'
+    endif
+    call s:WriteHtml()
+    call s:OpenFile(b:temp_html_file)
 endfunction
 
 function! s:Markdown2Html()
-    call s:WriteHtml(1)
+    if !exists('b:save_html_file')
+        let b:temp_html_file = expand('%p') . '.html'
+    endif
+    call s:WriteHtml()
+endfunction
+
+function! s:AutoRenderWhenSave()
+    call s:WriteHtml()
 endfunction
 
 function! s:Mail(name)
@@ -277,7 +293,8 @@ command -nargs=0 MkdView call s:ViewMarkDown()
 command -nargs=0 Mkd2html call s:Markdown2Html()
 command -nargs=1 MkdMail call s:Mail(<f-args>)
 
-autocmd QuitPre *.md,*.mkd,*.markdown     :call s:RemoveTempHtml()
+autocmd QuitPre     *.md,*.mkd,*.markdown   call s:RemoveTempHtml()
+autocmd BufWritePre *.md,*.mkd,*.markdown   call s:AutoRenderWhenSave()
 
 
 let &cpo = s:save_cpo
