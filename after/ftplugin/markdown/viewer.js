@@ -9,14 +9,15 @@ var marked = require('marked'),
   hljs = require('highlight.js'),
   fs = require('fs'),
   args = process.argv,
-  filePath = args[2];
+  filePath = args[2],
+  isHighlightCode = (args[3] + '') === '1';
 
 if (!marked) {
   console.log('ERROR: no marked');
   return;
 }
 
-if (!hljs) {
+if (isHighlightCode && !hljs) {
   console.log('ERROR: no highlight.js');
   return;
 }
@@ -31,7 +32,14 @@ fs.readFile(filePath, {
      * @see Renderer.prototype.code in `marked.js`
      */
     theRenderer.code = function(code, lang, escaped) {
-      if (this.options.highlight) {
+
+      if(lang === 'mermaid' ||
+          code.match(/^sequenceDiagram/) || code.match(/^graph/)){
+        return '<div class="mermaid">' + code + '</div>';
+      }
+
+
+      if (this.options.highlight && isHighlightCode) {
         var out = this.options.highlight(code, lang);
         if (out != null && out !== code) {
           escaped = true;
@@ -68,7 +76,6 @@ fs.readFile(filePath, {
     });
 
     try {
-
       // FIX https://github.com/chjj/marked/issues/642
       data = data.replace(/^(#+)([^ #])/mg, function (all, $1, $2) {
         return $1 + ' ' + $2;
@@ -78,11 +85,12 @@ fs.readFile(filePath, {
       //parsed = marked('I am using __markdown__.');
     } catch (ex) {
       console.log('ERROR: marked to parse markdown content');
+      return;
     }
 
     console.log(parsed);
 
-  });
+});
 
 
 

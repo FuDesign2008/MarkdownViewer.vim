@@ -7,9 +7,71 @@
 <style>
 {{style}}
 </style>
+<style>
+{{hljs-css}}
+</style>
+<script src="{{mermaid-path}}"></script>
+<script>
+if (mermaid) {
+    mermaid.initialize({startOnLoad:true});
+}
+</script>
 </head>
 <body>
 {{content}}
+<script>
+var svg2Img = '{{svg-2-img}}',
+    hash;
+
+if (svg2Img === 'true') {
+    svg2Img = true;
+} else {
+    hash = window.location.hash;
+    if (/svg2img/i.test(hash)) {
+        svg2Img = true;
+    } else {
+        svg2Img = false;
+    }
+}
+
+if (svg2Img) {
+    window.setTimeout(function () {
+        var svgElements = document.querySelectorAll('svg'),
+            len = svgElements.length,
+            index = 0,
+            isMermaidEnable = !!window.mermaid,
+            renderSvgAsImg = function (svg){
+                var xml = svg.outerHTML;
+                var tempImg = new Image();
+                tempImg.src = 'data:image/svg+xml,' + escape(xml);
+                tempImg.onload = function() {
+                    tempImg.onload = null;
+                    var canvas = document.createElement('canvas'),
+                        context,
+                        newImg;
+
+                    canvas.width = tempImg.width;
+                    canvas.height = tempImg.height;
+
+                    context = canvas.getContext('2d');
+                    context.drawImage(tempImg, 0, 0);
+
+                    newImg = new Image();
+                    newImg.onload = function () {
+                        newImg.onload = null;
+                        svg.parentNode.replaceChild(newImg, svg);
+                    }
+                    newImg.src = canvas.toDataURL();
+                    tempImg = null;
+                }
+            };
+
+        for (index = 0; index < len; index++) {
+            renderSvgAsImg(svgElements[index]);
+        }
+    }, 1000);
+}
+</script>
 </body>
 </html>
 
