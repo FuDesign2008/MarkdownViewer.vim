@@ -82,36 +82,32 @@ function s:MakeUpHtml(theme, content)
 
     let read_theme = a:theme
     let style = s:ReadFile('/css/' . read_theme . '.css', '\n')
-    if len(style) < 1
-        read_theme = s:theme_default
-        let style = s:ReadFile('/css/' . read_theme . '.css', '\n')
-    endif
 
-    let hljs_css = ''
     if g:mdv_highlight_code
         let hljs_css = s:ReadFile('/css/hljs/' . g:mdv_code_theme . '.css', '')
-        if strlen(hljs_css) < 1
-            let hljs_css = s:ReadFile('/css/hljs/'. s:code_theme_default . '.css', '')
-        endif
-
-        let style_fix = s:ReadFile('/css/' . read_theme . '-hljs.css', '')
-        let style = style . style_fix
+        let hljs_fix = s:ReadFile('/css/' . read_theme . '-hljs.css', '')
+        let style = style . hljs_css . hljs_fix
     endif
 
+
+
     let mermaid_path = s:scriptPath . '/js/mermaid.min.js'
+    let mermaid_css = s:ReadFile('/css/mermaid.css', '')
+    let style = style . mermaid_css
 
     let html = s:ReadFile('/bone.html', '')
 
     let title = s:GetTitle(a:content)
     let html = substitute(html, '{{title}}', escape(title, '&\'), '')
     let html = substitute(html, '{{style}}', style, '')
-    let html = substitute(html, '{{hljs-css}}', hljs_css, '')
     let html = substitute(html, '{{mermaid-path}}', mermaid_path, '')
     let html = substitute(html, '{{content}}', escape(a:content, '&\'), '')
 
     if exists('g:mdv_mermaid_img') && g:mdv_mermaid_img
         let html = substitute(html, '{{svg-2-img}}', 'true', '')
     endif
+    let svg2img_path = s:scriptPath . '/js/svg2img.js'
+    let html = substitute(html, '{{svg2img-js}}', svg2img_path, '')
 
 
     let lines = split(html, '\n')
@@ -293,7 +289,7 @@ command -nargs=0 MkdView call s:ViewMarkDown()
 command -nargs=0 Mkd2html call s:Markdown2Html()
 command -nargs=1 MkdMail call s:Mail(<f-args>)
 
-autocmd QuitPre     *.md,*.mkd,*.markdown   call s:RemoveTempHtml()
+autocmd QuitPre,BufDelete,BufUnload,BufHidden,BufWinLeave     *.md,*.mkd,*.markdown   call s:RemoveTempHtml()
 autocmd BufWritePre *.md,*.mkd,*.markdown   call s:AutoRenderWhenSave()
 
 
