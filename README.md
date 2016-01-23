@@ -126,6 +126,8 @@ Then, executing `:MkdMail example` command will use the `example` configuration
 to mail the current file content to `xyz@example.com`.
 
 ##Change Log
+* 2016-01-23
+    - bugfix
 * 2016-01-21
     - Add support for image and mermaid
     - Remove `g:mdv_loaded`, `g:mdv_html`
@@ -137,9 +139,6 @@ to mail the current file content to `xyz@example.com`.
 
 * 2015-01-15
     - add highlight for code
-
-##Next
-1. better image support
 
 
 
