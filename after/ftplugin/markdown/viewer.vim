@@ -11,7 +11,7 @@ let g:mdv_loaded = 1
 let s:save_cpo = &cpo
 set cpo&vim
 
-let s:scriptPath = expand('<sfile>:hp')
+let s:scriptPath = expand('<sfile>:p:h')
 
 let s:theme_default = 'github2'
 if !exists('g:mdv_theme')
@@ -168,7 +168,9 @@ endfunction
 
 function! s:ViewMarkDown()
     if !exists('b:temp_html_file')
-        let b:temp_html_file = expand('%p') . '_temp_.html'
+        let file_name = expand('%:t')
+        let file_path = expand('%:p:h')
+        let b:temp_html_file = file_path . '/.' . file_name . '.temp.html'
     endif
     call s:WriteHtml()
     call s:OpenFile(b:temp_html_file)
@@ -176,7 +178,7 @@ endfunction
 
 function! s:Markdown2Html()
     if !exists('b:save_html_file')
-        let b:temp_html_file = expand('%p') . '.html'
+        let b:save_html_file = expand('%:p') . '.html'
     endif
     call s:WriteHtml()
 endfunction
