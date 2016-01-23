@@ -289,7 +289,7 @@ command -nargs=0 MkdView call s:ViewMarkDown()
 command -nargs=0 Mkd2html call s:Markdown2Html()
 command -nargs=1 MkdMail call s:Mail(<f-args>)
 
-autocmd QuitPre     *.md,*.mkd,*.markdown   call s:RemoveTempHtml()
+autocmd QuitPre,BufDelete,BufUnload,BufHidden,BufWinLeave     *.md,*.mkd,*.markdown   call s:RemoveTempHtml()
 autocmd BufWritePre *.md,*.mkd,*.markdown   call s:AutoRenderWhenSave()
 
 
