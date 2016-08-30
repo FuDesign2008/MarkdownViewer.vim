@@ -21,9 +21,6 @@ Parse markdown to html and preview it, compatible with [GitHub flavored markdown
 
 1. `:Mkd2html`, converting markdown file to html file and store html file.
 
-1. `:MkdMail config-name`, send an email with the html to someone. This command
-   needs python support and the `g:mkd_mail_config` should be set.
-
 ##Screenshot
 ![MarkdownViewer Screenshot](markdown_viewer.png)
 
@@ -90,42 +87,10 @@ Parse markdown to html and preview it, compatible with [GitHub flavored markdown
 
 1. `g:mdv_mermaid_img`, The `mermaid` renders graph as `svg`. If you want to render the graph as image, you can set this option to `1`. The default value is `0`.
 
-1. `g:mdv_mail_config`, the configuration for `:MkdMail` command. All the
-   configuration should be written in `~/mdv_mail_config.vim`. Below is an
-   example:
-
-```vimscript
-
-" ~/mdv_mail_config.vim
-
-let g:mdv_mail_config = {}
-
-let g:mdv_mail_config['example'] = {
-    \ 'from': 'abc@example.com',
-    \ 'to': ['xyz@example.com'],
-    \ 'cc': ['mnq@example.com'],
-    \ 'server_host': 'smtp.example.com',
-    \ 'server_port': 25,
-    \ 'login_name': 'abc@example.com',
-    \ 'login_pwd': 'the-password'
-    \ }
-
-let g:mdv_mail_config['example2'] = {
-    \ 'from': 'abc2@example.com',
-    \ 'to': ['xyz2@example.com'],
-    \ 'cc': [],
-    \ 'server_host': 'smtp.example.com',
-    \ 'server_port': 25,
-    \ 'login_name': 'abc2@example.com',
-    \ 'login_pwd': 'the-password-2'
-    \ }
-
-```
-
-Then, executing `:MkdMail example` command will use the `example` configuration
-to mail the current file content to `xyz@example.com`.
 
 ##Change Log
+* 2016-08-30
+    - Remove `:MkdMail` Command
 * 2016-01-23
     - bugfix
 * 2016-01-21
