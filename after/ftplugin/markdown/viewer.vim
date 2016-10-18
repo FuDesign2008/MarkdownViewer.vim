@@ -41,7 +41,7 @@ function! s:OpenFile(filePath)
     elseif has('win32') || has('win64') || has('win95') || has('win16')
         let cmdStr = 'cmd /c start "" ' . path
     else
-        echomsg "Can NOT open " . a:filePath
+        echomsg 'Can NOT open ' . a:filePath
         return
     endif
 
@@ -64,10 +64,10 @@ endfunction
 "
 function s:GetTitle(html)
     let matched = matchstr(a:html, '<h1[^>]\+>[^<]\+</h1>')
-    if matched == ''
+    if matched ==? ''
         let matched = matchstr(a:html, '<h1>[^<]\+</h1>')
     endif
-    if matched == ''
+    if matched ==? ''
         return ''
     endif
     let gtIndex = stridx(matched, '>')
@@ -191,8 +191,11 @@ endfunction
 command -nargs=0 MkdView call s:ViewMarkDown()
 command -nargs=0 Mkd2html call s:Markdown2Html()
 
-autocmd QuitPre,BufDelete,BufUnload,BufHidden,BufWinLeave     *.md,*.mkd,*.markdown   call s:RemoveTempHtml()
-autocmd BufWritePre *.md,*.mkd,*.markdown   call s:AutoRenderWhenSave()
+augroup markdownviewer
+    autocmd!
+    autocmd QuitPre,BufDelete,BufUnload,BufHidden,BufWinLeave     *.md,*.mkd,*.markdown   call s:RemoveTempHtml()
+    autocmd BufWritePre *.md,*.mkd,*.markdown   call s:AutoRenderWhenSave()
+augroup END
 
 
 let &cpo = s:save_cpo
