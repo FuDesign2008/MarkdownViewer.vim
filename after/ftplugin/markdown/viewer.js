@@ -34,7 +34,9 @@ fs.readFile(filePath, {
     theRenderer.code = function(code, lang, escaped) {
 
       if(lang === 'mermaid' ||
-          code.match(/^sequenceDiagram/) || code.match(/^graph/)){
+          code.match(/^sequenceDiagram/) ||
+          code.match(/^graph/) ||
+          code.match(/^gantt/) {
         return '<div class="mermaid">' + code + '</div>';
       }
 
