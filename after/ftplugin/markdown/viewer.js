@@ -1,5 +1,5 @@
 
-/*jshint node: true, nomen: true, indent: 2, maxlen: 80, plusplus: true,  regexp: true, eqnull: true */
+/*jshint node: true */
 /* global escape: true */
 
 
@@ -23,7 +23,7 @@ if (isHighlightCode && !hljs) {
 }
 
 fs.readFile(filePath, {
-    encoding: "utf-8"
+    encoding: 'utf-8'
   }, function (err, data) {
     var parsed = '',
       theRenderer = new marked.Renderer();
@@ -36,7 +36,8 @@ fs.readFile(filePath, {
       if(lang === 'mermaid' ||
           code.match(/^sequenceDiagram/) ||
           code.match(/^graph/) ||
-          code.match(/^gantt/) {
+          code.match(/^gantt/)
+      ){
         return '<div class="mermaid">' + code + '</div>';
       }
 
