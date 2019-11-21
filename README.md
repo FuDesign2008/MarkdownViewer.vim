@@ -5,8 +5,8 @@ Parse markdown to html and preview it, compatible with [GitHub flavored markdown
 ## Install
 
 1.  Install `node.js` and `npm`.
-1.  Install `marked` and `highlight.js` packages globally
-    -   `npm install -g marked`
+1.  Install `markdown-it` and `highlight.js` packages globally
+    -   `npm install -g markdown-it`
     -   `npm install -g highlight.js`
 1.  Set `NODE_PATH` environment variable
     -   add `export NODE_PATH=/usr/lib/node_modules:$NODE_PATH` to `~/.bash_profile` or `~/.zshrc`
@@ -29,18 +29,14 @@ Parse markdown to html and preview it, compatible with [GitHub flavored markdown
 ## Configuration
 
 1.  `g:mdv_theme` , the theme of html file. The available values are :
-
     -   `github2`, the default
     -   `github`
     -   `clear`
     -   `clearDark`
-
 1.  `g:mdv_highlight_code`, to highlight code or not, default value is `1`. If
     you want to prevent to highlight code, you can set it to `0` in `.vimrc`.
-
 1.  `g:mdv_code_theme`, the theme of code in html file. The default value is
     `default`. The possible values are :
-
     -   `arta`
     -   `ascetic`
     -   `atelier-dune.dark`
@@ -87,11 +83,14 @@ Parse markdown to html and preview it, compatible with [GitHub flavored markdown
     -   `vs`
     -   `xcode`
     -   `zenburn`
-
 1.  `g:mdv_mermaid_img`, The `mermaid` renders graph as `svg`. If you want to render the graph as image, you can set this option to `1`. The default value is `0`.
 
 ## Change Log
 
+-   2019-11-21
+    -   Use `markdown-it` insteadof `marked`
+        -   see https://github.com/Microsoft/vscode/issues/4668
+        -   see https://github.com/markedjs/marked/issues/724
 -   2016-08-30
     -   Remove `:MkdMail` Command
 -   2016-01-23

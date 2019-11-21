@@ -1,102 +1,65 @@
-
-/*jshint node: true */
-/* global escape: true */
+/* jshint node: true */
 
 
-'use strict';
+const markdownIt = require('markdown-it')
+const hljs = require('highlight.js')
+const fs = require('fs')
 
-var marked = require('marked'),
-  hljs = require('highlight.js'),
-  fs = require('fs'),
-  args = process.argv,
-  filePath = args[2],
-  isHighlightCode = (args[3] + '') === '1';
+const args = process.argv
+const filePath = args[2]
 
-if (!marked) {
-  console.log('ERROR: no marked');
-  return;
+if (!markdownIt) {
+  console.log('ERROR: no markdownIt')
+  process.exit(1)
 }
 
-if (isHighlightCode && !hljs) {
-  console.log('ERROR: no highlight.js');
-  return;
+if (!hljs) {
+  console.log('Error: no highlight.js')
+  process.exit(1)
 }
+
+
+const markdownCompiler = markdownIt({
+  highlight(str, lang) {
+    if (lang === 'mermaid'
+        || str.match(/^sequenceDiagram/)
+        || str.match(/^graph/)
+        || str.match(/^gantt/)
+    ) {
+      return `<div class="mermaid">${str}</div>`
+    }
+
+    if (lang && hljs.getLanguage(lang)) {
+      try {
+        return `<pre class="hljs"><code>${
+          hljs.highlight(lang, str, true).value
+        }</code></pre>`
+      } catch (ex) {
+        // do nothing
+      }
+    }
+
+    const escapedStr = markdownCompiler.utils.escapeHtml(str)
+    return `<pre class="hljs"><code>${escapedStr}</code></pre>`
+  },
+})
+
 
 fs.readFile(filePath, {
-    encoding: 'utf-8'
-  }, function (err, data) {
-    var parsed = '',
-      theRenderer = new marked.Renderer();
+  encoding: 'utf-8',
+}, (err, data) => {
+  if (err) {
+    console.log(`ERROR: failed to read file [${filePath}]`)
+    return
+  }
 
-    /**
-     * @see Renderer.prototype.code in `marked.js`
-     */
-    theRenderer.code = function(code, lang, escaped) {
+  let parsed = 'ERROR: markdown-it failed to render markdown content'
 
-      if(lang === 'mermaid' ||
-          code.match(/^sequenceDiagram/) ||
-          code.match(/^graph/) ||
-          code.match(/^gantt/)
-      ){
-        return '<div class="mermaid">' + code + '</div>';
-      }
+  try {
+    parsed = markdownCompiler.render(data)
+  } catch (ex) {
+    // do nothing
+  }
 
-
-      if (this.options.highlight && isHighlightCode) {
-        var out = this.options.highlight(code, lang);
-        if (out != null && out !== code) {
-          escaped = true;
-          code = out;
-        }
-      }
-
-      if (!lang) {
-        return '<pre><code class="hljs">' +
-          (escaped ? code : escape(code, true)) + '\n</code></pre>';
-      }
-
-      return '<pre><code class="hljs ' +
-        this.options.langPrefix + escape(lang, true) + '">' +
-        (escaped ? code : escape(code, true)) +
-        '\n</code></pre>\n';
-    };
-
-
-    if (err) {
-      console.log('ERROR: read file error [' + filePath +  ']' );
-      return;
-    }
-
-
-    marked.setOptions({
-      langPrefix: '',
-      renderer: theRenderer,
-      highlight: function (code) {
-        var highlighted = hljs.highlightAuto(code),
-          html = highlighted.value || '';
-        return html;
-      }
-    });
-
-    try {
-      // FIX https://github.com/chjj/marked/issues/642
-      data = data.replace(/^(#+)([^ #])/mg, function (all, $1, $2) {
-        return $1 + ' ' + $2;
-      });
-
-      parsed = marked(data);
-      //parsed = marked('I am using __markdown__.');
-    } catch (ex) {
-      console.log('ERROR: marked to parse markdown content');
-      return;
-    }
-
-    console.log(parsed);
-
-});
-
-
-
-
-
-
+  console.log(parsed)
+})
