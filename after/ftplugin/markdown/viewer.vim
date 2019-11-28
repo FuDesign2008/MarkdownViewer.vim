@@ -4,12 +4,12 @@
 "
 
 
-if &cp || exists('g:mdv_loaded')
+if &compatible || exists('g:mdv_loaded')
     finish
 endif
 let g:mdv_loaded = 1
-let s:save_cpo = &cpo
-set cpo&vim
+let s:save_cpo = &cpoptions
+set cpoptions&vim
 
 let s:scriptPath = expand('<sfile>:p:h')
 
@@ -198,4 +198,4 @@ augroup markdownviewer
 augroup END
 
 
-let &cpo = s:save_cpo
+let &cpoptions = s:save_cpo
