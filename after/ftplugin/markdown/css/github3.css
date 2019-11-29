@@ -962,3 +962,10 @@
 .markdown-body .pl-12 {
     padding-left: 128px !important;
 }
+
+@media screen and (min-width: 914px) {
+    .markdown-body {
+        width: 854px;
+        margin: 0 auto;
+    }
+}
