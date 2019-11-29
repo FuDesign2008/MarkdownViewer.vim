@@ -433,7 +433,7 @@ endfunction
 command -nargs=? -complete=customlist,MkdViewCompleter MkdView call s:ViewMarkdown(<f-args>)
 command -nargs=? -complete=customlist,MkdViewCompleter Mkd2html call s:Markdown2Html(<f-args>)
 command -nargs=+ -complete=customlist,MarkdownViewCompleter MarkdownView call s:ViewMarkdownWithInputConfig(<f-args>)
-command -nargs=+ -complete=customlist,MarkdownViewCompleter MarkdownView call s:Markdown2HtmlWithInputConfig(<f-args>)
+command -nargs=+ -complete=customlist,MarkdownViewCompleter Markdown2html call s:Markdown2HtmlWithInputConfig(<f-args>)
 
 augroup markdownviewer
     autocmd!
