@@ -406,9 +406,13 @@ function MkdViewCompleter(A, L, C)
     return matchedList
 endfunction
 
+let s:test_file = '/Users/fuyg/workspace/github2008/MarkdownViewer.vim/temp.txt'
+
 function MarkdownViewCompleter(A, L, C)
     let names = s:themeFullList
     let hint = trim(a:A)
+
+    call writefile([hint], s:test_file, 'a')
 
     if strlen(hint) == 0
         return names
