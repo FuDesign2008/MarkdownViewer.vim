@@ -86,9 +86,10 @@ Parse markdown to html and preview it, compatible with [GitHub flavored markdown
     -   `xcode`
     -   `zenburn`
 1.  `g:mdv_mermaid_img`, The `mermaid` renders graph as `svg`. If you want to render the graph as image, you can set this option to `1`. The default value is `0`.
-1.  `g:mdv_config_pack`: a dictionary
+1.  `g:mdv_config_pack`: a dictionary for pre-config for `:MkdView config_name` and `:Mkd2html config_name` commands
 
-```
+```viml
+" this is a example
 let g:mdv_config_pack = {
     \  'github': {
             \ 'theme': 'github2',
@@ -114,6 +115,7 @@ let g:mdv_config_pack = {
     -   MOD `:Mkd2html config_name`
     -   ADD `:MarkdownView theme code_theme mermaid_img`
     -   ADD `:Markdown2html theme code_theme mermaid_img`
+    -   ADD command complete for all commands
 -   2019-11-21
     -   Use `markdown-it` insteadof `marked`
         -   see https://github.com/Microsoft/vscode/issues/4668
