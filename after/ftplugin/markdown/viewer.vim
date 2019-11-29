@@ -485,6 +485,7 @@ function MarkdownViewCompleter(A, L, C)
         else
             let completeList = s:CodeThemeComplete(a:A)
         endif
+        return completeList
     endif
 
     return []
