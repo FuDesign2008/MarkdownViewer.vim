@@ -770,6 +770,10 @@ footer {
     --item-hover-bg-color: #e6f0fe;
 }
 
+img {
+    max-width: 100%;
+}
+
 @media screen and (min-width: 914px) {
     body {
         width: 854px;
