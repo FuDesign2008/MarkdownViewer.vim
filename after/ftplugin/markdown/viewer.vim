@@ -131,9 +131,9 @@ function! s:GetConfigItemFromPack(name)
         return globalConfig
     endif
 
-    let config = get(g:mdv_config_pack, a:name)
+    let config = get(g:mdv_config_pack, a:name, {})
 
-    if !config
+    if empty(config)
         return globalConfig
     endif
 
