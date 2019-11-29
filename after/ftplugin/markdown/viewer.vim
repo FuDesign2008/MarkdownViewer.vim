@@ -407,12 +407,7 @@ function MkdViewCompleter(A, L, C)
 endfunction
 
 function MarkdownViewCompleter(A, L, C)
-    let names= []
-
-    if exists('g:mdv_config_pack')
-        let names = keys(s:themeFullList)
-    endif
-
+    let names = keys(s:themeFullList)
     let hint = trim(a:A)
 
     if strlen(hint) == 0
