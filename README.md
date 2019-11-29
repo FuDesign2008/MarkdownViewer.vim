@@ -29,14 +29,16 @@ Parse markdown to html and preview it, compatible with [GitHub flavored markdown
 ## Configuration
 
 1.  `g:mdv_theme` , the theme of html file. The available values are :
-    -   `github2`, the default
     -   `github`
+    -   `github2`, the default
+    -   `github3`
     -   `clear`
     -   `clearDark`
+    -   `vue`
+    -   `vue-dark`
 1.  `g:mdv_highlight_code`, to highlight code or not, default value is `1`. If
     you want to prevent to highlight code, you can set it to `0` in `.vimrc`.
-1.  `g:mdv_code_theme`, the theme of code in html file. The default value is
-    `default`. The possible values are :
+1.  `g:mdv_code_theme`, the theme of code in html file, provided by [highlight.js](https://highlightjs.org/). The default value is `default`. The possible values are :
     -   `arta`
     -   `ascetic`
     -   `atelier-dune.dark`
@@ -84,9 +86,36 @@ Parse markdown to html and preview it, compatible with [GitHub flavored markdown
     -   `xcode`
     -   `zenburn`
 1.  `g:mdv_mermaid_img`, The `mermaid` renders graph as `svg`. If you want to render the graph as image, you can set this option to `1`. The default value is `0`.
+1.  `g:mdv_config_pack`: a dictionary for pre-config for `:MkdView config_name` and `:Mkd2html config_name` commands
+
+```viml
+" this is a example
+let g:mdv_config_pack = {
+    \  'github': {
+            \ 'theme': 'github2',
+            \ 'highlight_code': 1,
+            \ 'code_theme': 'default',
+            \ 'mermaid_img': 0
+        \},
+    \ 'vue': {
+            \ 'theme': 'vue',
+            \ 'highlight_code': 1,
+            \ 'code_theme': 'default',
+            \ 'mermaid_img': 1
+        \}
+    \ }
+
+
+```
 
 ## Change Log
 
+-   2019-11-28
+    -   MOD `:MkdView config_name`
+    -   MOD `:Mkd2html config_name`
+    -   ADD `:MarkdownView theme code_theme mermaid_img`
+    -   ADD `:Markdown2html theme code_theme mermaid_img`
+    -   ADD command complete for all commands
 -   2019-11-21
     -   Use `markdown-it` insteadof `marked`
         -   see https://github.com/Microsoft/vscode/issues/4668
@@ -99,12 +128,8 @@ Parse markdown to html and preview it, compatible with [GitHub flavored markdown
     -   Add support for image and mermaid
     -   Remove `g:mdv_loaded`, `g:mdv_html`
 -   2015-11-09
-
     -   bug fix for heading, see https://github.com/chjj/marked/issues/642
-
 -   2015-05-29
-
     -   add `:MkdMail` command
-
 -   2015-01-15
     -   add highlight for code
