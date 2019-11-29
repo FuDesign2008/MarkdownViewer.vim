@@ -412,7 +412,7 @@ function MarkdownViewCompleter(A, L, C)
     let names = s:themeFullList
     let hint = trim(a:A)
 
-    call writefile([hint], s:test_file, 'a')
+    call writefile([a:A, a:L, a:C], s:test_file, 'a')
 
     if strlen(hint) == 0
         return names
