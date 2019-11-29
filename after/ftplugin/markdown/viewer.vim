@@ -105,7 +105,7 @@ function! s:BuildConfigItem(theme, isHighlightCode, codeTheme, isMermaidImg)
 endfunction
 
 function! s:BuildGlobalConfig()
-    let config = s:BuildGlobalConfig(g:mdv_theme, g:mdv_highlight_code, g:mdv_code_theme, g:mdv_mermaid_img)
+    let config = s:BuildConfigItem(g:mdv_theme, g:mdv_highlight_code, g:mdv_code_theme, g:mdv_mermaid_img)
     return config
 endfunction
 
@@ -313,9 +313,10 @@ function! s:ParseInputPackName(length, args)
     if a:length > 0
         let name = get(a:args, 0)
         let config = s:GetConfigItemFromPack(name)
-    else
-        let config = s:GetConfigForCurrentBuffer()
+        return config
     endif
+    let config = s:GetConfigForCurrentBuffer()
+    return config
 endfunction
 
 function! s:ViewMarkdown(...)
