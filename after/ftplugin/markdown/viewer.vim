@@ -407,7 +407,7 @@ function MkdViewCompleter(A, L, C)
 endfunction
 
 function MarkdownViewCompleter(A, L, C)
-    let names = keys(s:themeFullList)
+    let names = s:themeFullList
     let hint = trim(a:A)
 
     if strlen(hint) == 0
