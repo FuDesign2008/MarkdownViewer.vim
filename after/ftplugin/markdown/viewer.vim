@@ -406,27 +406,89 @@ function MkdViewCompleter(A, L, C)
     return matchedList
 endfunction
 
-let s:test_file = '/Users/fuyg/workspace/github2008/MarkdownViewer.vim/temp.txt'
+function! s:ThemeComplete(hint)
+    let trimed = trim(a:hint)
 
-function MarkdownViewCompleter(A, L, C)
-    let names = s:themeFullList
-    let hint = trim(a:A)
-
-    call writefile([a:A, a:L, a:C], s:test_file, 'a')
-
-    if strlen(hint) == 0
-        return names
+    if len(trimed) == 0
+        return s:themeFullList
     endif
 
     let matchedList= []
-    for item in names
-        if stridx(item, hint) > -1
+    for item in s:themeFullList
+        if stridx(item, trimed) > -1
             call add(matchedList, item)
         endif
     endfor
 
     return matchedList
 endfunction
+
+function! s:CodeThemeComplete(hint)
+    let trimed = trim(a:hint)
+
+    if len(trimed) == 0
+        return s:codeThemeFullList
+    endif
+
+    let matchedList= []
+    for item in s:codeThemeFullList
+        if stridx(item, trimed) > -1
+            call add(matchedList, item)
+        endif
+    endfor
+
+    return matchedList
+endfunction
+
+function! s:MermaidImgComplete(hint)
+    let completeList = ['0', '1']
+    let trimed = trim(a:hint)
+
+    if len(trimed) == 0
+        return completeList
+    endif
+
+    return []
+endfunction
+
+function! s:isEndWithSpace(str)
+    return matchend(a:str, '[ \t]') == -1 ? 0: 1
+endfunction
+
+
+
+" A: g
+" L: MarkdownView g
+" C: 14
+"
+" A: v
+" L: MarkdownView github2 v
+" C: 22
+"
+function MarkdownViewCompleter(A, L, C)
+    let parts = split(a:L)
+    let length = len(parts)
+
+    if length == 1
+        return s:themeFullList
+    elseif length == 2
+        if s:isEndWithSpace(a:L)
+            let completeList = s:CodeThemeComplete(' ')
+        else
+            let completeList = s:ThemeComplete(a:A)
+        endif
+        return completeList
+    elseif length == 3
+        if s:isEndWithSpace(a:L)
+            let completeList = s:MermaidImgComplete(' ')
+        else
+            let completeList = s:CodeThemeComplete(a:A)
+        endif
+    endif
+
+    return []
+endfunction
+
 
 
 command -nargs=? -complete=customlist,MkdViewCompleter MkdView call s:ViewMarkdown(<f-args>)
