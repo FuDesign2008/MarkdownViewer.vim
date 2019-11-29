@@ -453,7 +453,7 @@ endfunction
 
 function! s:isEndWithSpace(str)
     let length = strlen(a:str)
-    return strridx(a:str, ' ') == length -1  ? 0: 1
+    return strridx(a:str, ' ') == length - 1  ? 1 :  0
 endfunction
 
 
