@@ -452,7 +452,8 @@ function! s:MermaidImgComplete(hint)
 endfunction
 
 function! s:isEndWithSpace(str)
-    return matchend(a:str, '[ \t]') == -1 ? 0: 1
+    let length = strlen(a:str)
+    return strridx(a:str, ' ') == length -1  ? 0: 1
 endfunction
 
 
