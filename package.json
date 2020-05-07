@@ -1,0 +1,23 @@
+{
+  "name": "markdownviewer.vim",
+  "version": "1.0.0",
+  "description": "Parse markdown to html and preview it, compatible with [GitHub flavored markdown](https://help.github.com/articles/github-flavored-markdown) and support [mermaid](http://knsv.github.io/mermaid/index.html).",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FuDesign2008/MarkdownViewer.vim.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/FuDesign2008/MarkdownViewer.vim/issues"
+  },
+  "homepage": "https://github.com/FuDesign2008/MarkdownViewer.vim#readme",
+  "dependencies": {
+    "highlight.js": "^10.0.2",
+    "markdown-it": "^10.0.0"
+  }
+}
