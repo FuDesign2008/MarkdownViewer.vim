@@ -147,12 +147,18 @@ function! s:OpenFile(filePath)
     let path = shellescape(a:filePath)
     let cmdStr = ''
 
-    if has('mac')
+    if has('mac') || has('macunix')
         let cmdStr = 'open -a Safari ' . path
         let findStr = system('ls /Applications/ | grep -i google\ chrome')
         if strlen(findStr) > 5
             let cmdStr = 'open -a Google\ Chrome ' . path
         endif
+    elseif executable('google-chrome')
+        " for ubuntu
+        let cmdStr = 'google-chrome ' . path
+    elseif executable('firefox')
+        " for ubuntu
+        let cmdStr = 'firefox ' . path
     elseif has('win32') || has('win64') || has('win95') || has('win16')
         let cmdStr = 'cmd /c start "" ' . path
     else
