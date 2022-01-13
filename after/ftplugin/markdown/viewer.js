@@ -1,4 +1,4 @@
-/* jshint node: true */
+/* jshint node: true, esversion: 6, asi: true */
 
 
 const markdownIt = require('markdown-it')
@@ -45,10 +45,8 @@ const options = {
   // or '' if the source string is not changed and should be escaped externally.
   // If result starts with <pre... internal wrapper is skipped.
   highlight(str, lang) {
-    if (lang === 'mermaid'
-        || str.match(/^sequenceDiagram/)
-        || str.match(/^graph/)
-        || str.match(/^gantt/)
+    if (lang === 'mermaid' || str.match(/^sequenceDiagram/) ||
+        str.match(/^graph/) || str.match(/^gantt/)
     ) {
       return `<div class="mermaid">${str}</div>`
     }
