@@ -23,7 +23,6 @@
     "maxstatements": 32,
     "maxcomplexity": 12,
     "maxlen": 100,
-
     "asi": false,
     "boss": false,
     "debug": false,
@@ -47,8 +46,6 @@
     "sub": false,
     "supernew": false,
     "validthis": false,
-
-
     "browser": true,
     "couch": false,
     "devel": false,
@@ -63,7 +60,6 @@
     "worker": false,
     "wsh": false,
     "yui": false,
-
     "nomen": false,
     "onevar": true,
     "passfail": false,
