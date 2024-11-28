@@ -16,6 +16,7 @@ let s:scriptPath = expand('<sfile>:p:h')
 let s:themeFullList = [
     \ 'github',
     \ 'github2',
+    \ 'weixin',
     \ 'github3',
     \ 'clear',
     \ 'clearDark',
