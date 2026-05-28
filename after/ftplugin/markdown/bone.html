@@ -12,9 +12,10 @@
         </style>
         <script src="{{mermaid-path}}"></script>
         <script>
-            if (mermaid) {
-                mermaid.initialize({ startOnLoad: true })
-            }
+            mermaid.initialize({
+                startOnLoad: true,
+                theme: 'default'
+            });
         </script>
     </head>
     <body class="markdown-body">

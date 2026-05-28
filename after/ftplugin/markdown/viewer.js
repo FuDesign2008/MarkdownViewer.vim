@@ -17,7 +17,14 @@ if (!hljs) {
   console.log('Error: no highlight.js')
   process.exit(1)
 }
-const markdownCompiler = markdownIt()
+
+/**
+ * Known mermaid diagram type keywords.
+ * Used to match both fence language (lang param) and content first line (str param).
+ */
+const MERMAID_TYPES = 'sequenceDiagram|graph|flowchart|gantt|classDiagram|stateDiagram|stateDiagram-v2|erDiagram|journey|pie|gitGraph|C4Context|C4Container|C4Deployment|C4Dynamic|C4Boundary|mindmap|timeline|sankey|quadrantChart|requirement|block|block-beta|packet|packet-beta|architecture|architecture-beta|radar|treemap|venn|kanban|wardley|ishikawa|xychart|xychart-beta';
+const MERMAID_LANG_RE = new RegExp(`^(${MERMAID_TYPES})$`);
+const MERMAID_CONTENT_RE = new RegExp(`^(${MERMAID_TYPES})`);
 
 const options = {
 
@@ -38,36 +45,35 @@ const options = {
   // Double + single quotes replacement pairs, when typographer enabled,
   // and smartquotes on. Could be either a String or an Array.
   //
-  // For example, you can use '«»„“' for Russian, '„“‚‘' for German,
+  // For example, you can use '«»„"' for Russian, '„"‚'' for German,
   // and ['«\xA0', '\xA0»', '‹\xA0', '\xA0›'] for French (including nbsp).
-  quotes: '“”‘’',
+  quotes: '\u201C\u201D\u2018\u2019',
   // Highlighter function. Should return escaped HTML,
   // or '' if the source string is not changed and should be escaped externally.
   // If result starts with <pre... internal wrapper is skipped.
   highlight(str, lang) {
-    if (lang === 'mermaid' || str.match(/^sequenceDiagram/) ||
-        str.match(/^graph/) || str.match(/^gantt/)
-    ) {
+    if (lang === 'mermaid' || MERMAID_LANG_RE.test(lang) || MERMAID_CONTENT_RE.test(str)) {
       return `<div class="mermaid">${str}</div>`
     }
 
     if (lang && hljs.getLanguage(lang)) {
       try {
         return `<pre class="hljs"><code>${
-          hljs.highlight(lang, str, true).value
+          hljs.highlight(str, { language: lang }).value
         }</code></pre>`
       } catch (ex) {
         // do nothing
       }
     }
 
+    const markdownCompiler = markdownIt()
     const escapedStr = markdownCompiler.utils.escapeHtml(str)
     return `<pre class="hljs"><code>${escapedStr}</code></pre>`
   },
 }
 
 
-markdownCompiler.set(options)
+const markdownCompiler = markdownIt(options)
 
 fs.readFile(filePath, {
   encoding: 'utf-8',
